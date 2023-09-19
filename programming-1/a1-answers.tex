@@ -1,0 +1,46 @@
+\documentclass[12pt]{article}
+
+% Packages for formatting
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{filecontents}
+
+% Define page margins
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+
+% Define title page formatting
+\titleformat{\section}[block]{\normalfont\large\bfseries}{\thesection}{1em}{}
+\title{%
+  \textbf{Programming Assignment 1}\\
+  \vspace*{0.5em}
+  \large COMP 550: Natural Language Processing}
+\date{\today}
+\author{Jan Tiegges}
+\renewcommand{\thesection}{\arabic{section}}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+% problem setup
+
+\section{Methodology}
+% your dataset generation and experimental procedure
+% the range of parameter settings that you tried
+
+\section{Results}
+% report on the performance in terms of accuracy
+
+\section{Discussion}
+% speculate on the successes and failures of the models.
+% limitations
+% think about how much you can generalize the conclusions of your experiments to the overall problem of separating real vs. fake facts in general. What assumptions have we made that are reasonable or not reasonable?
+
+\section{Conclusion}
+
+% References section
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
