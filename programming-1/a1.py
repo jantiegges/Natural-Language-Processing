@@ -77,12 +77,12 @@ def classification(X_train, y_train, classifier, cv=5):
     elif classifier == 'logistic_regression':
         clf = LogisticRegression(solver='saga', max_iter=5000)
         param_grid = {
-            'C': [0.1, 0.5, 1, 5], #smoothing
+            'C': [0.1, 0.5, 1, 5], # regularization: smaller c --> stronger regularization
         }
     elif classifier == 'naive_bayes':
         clf = MultinomialNB(force_alpha=True)
         param_grid = {
-            'alpha': [0.1, 0.5, 1, 2]
+            'alpha': [0.1, 0.5, 1, 2] #smoothing
         }
     
     # apply grid search with cross-validation
@@ -100,8 +100,6 @@ def plot_table(results, title):
     """Plot the results of the preprocessing options."""
 
     df = pd.DataFrame(results)
-
-    # Create a table plot
     fig, ax = plt.subplots(figsize=(10, 4))   
     ax.axis('tight')
     ax.axis('off')
@@ -109,10 +107,9 @@ def plot_table(results, title):
     table.auto_set_font_size(False)
     table.set_fontsize(10)
     table.scale(1.5, 1.5)
-
     plt.title(title, fontsize=14)
     
-    # Export the plot as an image
+    # export the plot as an image
     plt.savefig(f'{title}.png', bbox_inches='tight', dpi=300)
 
 
@@ -132,6 +129,8 @@ if __name__ == '__main__':
 
     # preprocessing options to compare
     preprocessing_options = list(product([True, False], repeat=3))
+
+    # init resuts
     results = []
     best_preprocessing = {
     'svm_best': {'cv_train_score': -1, 'test_score': -1, 'preprocessing_options': None, 'model_params': None},
@@ -174,9 +173,9 @@ if __name__ == '__main__':
         # save all results
         results.append({
             'Stop rmv, Stem, Lemma': ', '.join(str(item) for item in options),
-            'Train / CV Mean Train / Test': f"{nb_train_score} / {nb_cv_train_score} / {nb_test_score}",
-            'Train / CV Mean Train / Test': f"{lr_train_score} / {lr_cv_train_score} / {lr_test_score}",
-            'Train / CV Mean Train / Test': f"{svm_train_score} / {svm_cv_train_score} / {svm_test_score}"
+            'NB Train / CV Mean Train / Test': f"{nb_train_score} / {nb_cv_train_score} / {nb_test_score}",
+            'LR Train / CV Mean Train / Test': f"{lr_train_score} / {lr_cv_train_score} / {lr_test_score}",
+            'SVM Train / CV Mean Train / Test': f"{svm_train_score} / {svm_cv_train_score} / {svm_test_score}"
         })
 
         # save best and worst results
