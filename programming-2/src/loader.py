@@ -4,7 +4,6 @@
 Developed for Python 2. Automatically converted to Python 3; may result in bugs.
 '''
 import xml.etree.cElementTree as ET
-import codecs
 
 class WSDInstance:
     def __init__(self, my_id, lemma, context, index):
@@ -16,7 +15,7 @@ class WSDInstance:
         '''
         For printing purposes.
         '''
-        return '%s\t%s\t%s\t%d' % (self.id, self.lemma, ' '.join(self.context), self.index)
+        return '{}\t{}\t{}\t{}'.format(self.id, self.lemma, ' '.join(self.context), self.index)
 
 def load_instances(f):
     '''
@@ -36,11 +35,11 @@ def load_instances(f):
             instances = test_instances
         for sentence in text:
             # construct sentence context
-            context = [to_ascii(el.attrib['lemma']) for el in sentence]
+            context = [el.attrib['lemma'] for el in sentence]
             for i, el in enumerate(sentence):
                 if el.tag == 'instance':
                     my_id = el.attrib['id']
-                    lemma = to_ascii(el.attrib['lemma'])
+                    lemma = el.attrib['lemma']
                     instances[my_id] = WSDInstance(my_id, lemma, context, i)
     return dev_instances, test_instances
 
@@ -52,31 +51,31 @@ def load_key(f):
     '''
     dev_key = {}
     test_key = {}
-    for line in open(f):
-        if len(line) <= 1: continue
-        #print (line)
-        doc, my_id, sense_key = line.strip().split(' ', 2)
-        if doc == 'd001':
-            dev_key[my_id] = sense_key.split()
-        else:
-            test_key[my_id] = sense_key.split()
+    with open(f) as file:
+        for line in file:
+            if len(line) <= 1: continue
+            doc, my_id, sense_key = line.strip().split(' ', 2)
+            key = dev_key if doc == 'd001' else test_key
+            key[my_id] = sense_key.split()
     return dev_key, test_key
 
-def to_ascii(s):
-    # remove all non-ascii characters
-    return codecs.encode(s, 'ascii', 'ignore')
-
 if __name__ == '__main__':
-    data_f = 'multilingual-all-words.en.xml'
-    key_f = 'wordnet.en.key'
+    data_f = '../data/multilingual-all-words.en.xml'
+    key_f = '../data/wordnet.en.key'
     dev_instances, test_instances = load_instances(data_f)
     dev_key, test_key = load_key(key_f)
     
     # IMPORTANT: keys contain fewer entries than the instances; need to remove them
-    dev_instances = {k:v for (k,v) in dev_instances.items() if k in dev_key}
-    test_instances = {k:v for (k,v) in test_instances.items() if k in test_key}
+    dev_instances = {k: v for k, v in dev_instances.items() if k in dev_key}
+    test_instances = {k: v for k, v in test_instances.items() if k in test_key}
     
-    # read to use here
     print(len(dev_instances)) # number of dev instances
     print(len(test_instances)) # number of test instances
+
+    # print number of distinct lemmas
+    print(len(set(instance.lemma for instance in dev_instances.values())))
+    print(len(set(instance.lemma for instance in test_instances.values())))
+
+    # print overlap of lemmas between dev and test
+    print(len(set(instance.lemma for instance in dev_instances.values()) & set(instance.lemma for instance in test_instances.values())))
     
