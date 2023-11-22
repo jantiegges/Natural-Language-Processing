@@ -5,16 +5,10 @@ from itertools import product
 from models import most_frequent_sense, nltk_lesk, bert_prediction
 from nltk.corpus import wordnet as wn
 import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-import nltk
-from nltk.corpus import brown
 import numpy as np
-from sklearn.model_selection import train_test_split
 from data_creation import create_brown_data, create_seed_set
 from models import nb_bootstrap, bootstrapping_grid_search
 
-from sklearn.metrics import accuracy_score
 from itertools import product
 
 
