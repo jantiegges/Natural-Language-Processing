@@ -13,3 +13,7 @@
 
 # pycache
 **/__pycache__
+
+# out and data folders
+out/
+data/
